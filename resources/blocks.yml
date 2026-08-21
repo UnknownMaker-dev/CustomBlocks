@@ -1,0 +1,108 @@
+# ============================================================================
+#  Blocos customizados
+#
+#  Cada entrada de "blocks" vira um bloco no jogo. A chave é o identificador,
+#  sempre no formato "namespace:nome" (só letras minúsculas, números e _).
+#  O namespace "minecraft" é reservado pelo jogo.
+#
+#  Texturas: coloque os PNGs em plugin_data/CustomBlocks/textures/ e use o nome
+#  do arquivo sem a extensão no campo "texture". O resource pack é montado
+#  sozinho quando o servidor sobe.
+#
+#  Só o campo de textura é obrigatório; todo o resto tem um padrão.
+# ============================================================================
+
+blocks:
+
+  # --- Exemplo mínimo: uma textura só, valendo para as seis faces ------------
+  customblocks:ruby_block:
+    name: "Bloco de Rubi"
+    texture: ruby_block
+    hardness: 5.0
+    blast_resistance: 30.0
+    tool: pickaxe
+    tool_tier: iron
+    creative:
+      category: construction
+      group: itemGroup.name.ore
+
+  # --- Exemplo com textura por face e luz ------------------------------------
+  customblocks:forja_magica:
+    name: "Forja Mágica"
+    textures:
+      up: forja_topo
+      down: forja_base
+      sides: forja_lado
+    hardness: 3.5
+    tool: pickaxe
+    tool_tier: stone
+    light_emission: 12       # 0 a 15
+    friction: 0.6            # 0.0 a 0.9 (gelo usa 0.02)
+    rotatable: true          # gira para a direção do jogador ao ser colocado
+    drops:
+      - id: minecraft:iron_ingot
+        amount: 3
+      - minecraft:redstone
+    xp_drop: 5
+    creative:
+      category: construction
+
+  # --- Exemplo transparente, menor que um cubo e sem colisão -----------------
+  customblocks:cristal_flutuante:
+    name: "Cristal Flutuante"
+    texture: cristal
+    render_method: alpha_test   # opaque | alpha_test (recorta) | blend (translúcido)
+    transparent: true
+    solid: false
+    hardness: 0.3
+    light_emission: 7
+    light_filter: 0             # 0 a 15, quanto de luz o bloco bloqueia
+    collision_box: false        # dá para atravessar o bloco
+    selection_box:
+      origin: [-4, 0, -4]       # entre (-8, 0, -8) e (8, 16, 8)
+      size: [8, 12, 8]
+    drops: self                 # self | none | lista de itens
+    creative:
+      category: nature
+
+# ============================================================================
+#  Referência dos campos
+#
+#  name                  Nome exibido no inventário. Padrão: derivado do id.
+#  texture               Uma textura para todas as faces.
+#  textures              Mapa por face: all, sides, up, down, north, south,
+#                        east, west.
+#  render_method         opaque (padrão), alpha_test, blend.
+#  face_dimming          Escurece as faces conforme a orientação. Padrão: true.
+#  ambient_occlusion     Sombra nos cantos. Padrão: true.
+#  geometry              Modelo do bloco. Padrão minecraft:geometry.full_block.
+#                        Use minecraft:geometry.cross para plantas, ou o id de
+#                        uma geometria do seu resource pack.
+#  rotatable             Gira nas 4 direções horizontais. Padrão: false.
+#
+#  hardness              Tempo relativo de quebra. Padrão: 1.0.
+#  mining_seconds        Tempo mostrado ao cliente. Padrão: igual à hardness.
+#  blast_resistance      Resistência a explosão. Padrão: hardness * 5.
+#  explosion_resistance  Valor enviado ao cliente. Padrão: blast_resistance.
+#  unbreakable           Bloco indestrutível. Padrão: false.
+#  tool                  none, sword, shovel, pickaxe, axe, shears, hoe.
+#  tool_tier             wood, gold, stone, iron, diamond, netherite.
+#
+#  light_emission        Luz emitida, 0 a 15. Padrão: 0.
+#  light_filter          Luz bloqueada, 0 a 15. Padrão: 15 (0 se transparente).
+#  friction              0.0 a 0.9. Padrão: 0.6.
+#  solid                 Serve de apoio para outros blocos. Padrão: true.
+#  transparent           Deixa a luz passar. Padrão: true se render_method
+#                        não for opaque.
+#  breathable            Dá para respirar dentro do bloco. Padrão: false.
+#
+#  flammable             false, ou { catch_chance: 5, destroy_chance: 20 }.
+#  collision_box         false, true, ou { origin: [...], size: [...] }.
+#  selection_box         Igual ao collision_box, mas para a mira.
+#
+#  drops                 self (padrão), none, ou uma lista. Cada item pode ser
+#                        só o id ou { id: ..., amount: ... }.
+#  xp_drop               XP solto ao quebrar. Padrão: 0.
+#  creative.category     all, commands, construction, equipment, items, nature.
+#  creative.group        Grupo dentro da categoria, ex.: itemGroup.name.ore.
+# ============================================================================

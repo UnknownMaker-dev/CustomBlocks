@@ -1,0 +1,30 @@
+# ============================================================================
+#  CustomBlocks
+#  Os blocos em si ficam no blocks.yml. Este arquivo cuida só do resource pack.
+# ============================================================================
+
+resource-pack:
+  # Gera o resource pack com as texturas dos blocos a partir dos PNGs em
+  # plugin_data/CustomBlocks/textures/.
+  # Desligue se você prefere manter o seu próprio pack montado à mão.
+  generate: true
+
+  # Coloca o pack gerado no topo da lista de resource packs do servidor
+  # automaticamente. Com isso você não precisa mexer em resource_packs.yml.
+  auto-register: true
+
+  # Obriga os jogadores a aceitarem os resource packs para entrar.
+  # Sem isso, quem recusar vai ver os blocos customizados sem textura.
+  force-resources: false
+
+  # Nome e descrição que aparecem na tela de pacotes do jogo.
+  name: "CustomBlocks"
+  description: "Texturas dos blocos customizados"
+
+  # Preenchidos automaticamente na primeira execução. Não troque depois que os
+  # jogadores já baixaram o pack, senão todo mundo baixa tudo de novo.
+  uuid: ""
+  module-uuid: ""
+
+  # Versão mínima do jogo exigida pelo pack.
+  min-engine-version: [1, 21, 0]

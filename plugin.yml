@@ -1,0 +1,19 @@
+name: CustomBlocks
+main: Unknown\CustomBlocks\CustomBlocks
+version: 1.0.0
+api: 5.1.3
+description: Criação de blocos customizados por configuração, usando o Customies.
+authors:
+  - zer0
+commands:
+  customblocks:
+    description: Gerencia os blocos customizados registrados
+    usage: "/customblocks <list|info|give|pack>"
+    permission: customblocks.command
+    aliases:
+      - cblocks
+      - cb
+permissions:
+  customblocks.command:
+    description: Permite usar o comando /customblocks
+    default: op
