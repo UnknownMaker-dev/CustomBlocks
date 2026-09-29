@@ -1,23 +1,27 @@
 # CustomBlocks
 
 Plugin de PocketMine-MP para criar blocos customizados escrevendo YAML, sem precisar de código.
-Toda a parte de rede e de palette é feita pelo [Customies](https://github.com/CustomiesDevs/Customies),
-que vem **embutido** — não é preciso instalar nada além deste plugin.
+Toda a parte de rede e de palette é feita pelo **Customies**, que precisa estar
+**instalado como plugin** em `plugins/`.
 
-> Esta é a versão **com libs**. Existe também a `CustomBlocks-NoLibs`, que usa o Customies
-> instalado no servidor. Use uma ou outra, nunca as duas.
+> ⚠️ **Use o fork do Altay: [altayofficial/Customies](https://github.com/altayofficial/Customies).**
+>
+> O upstream [CustomiesDevs/Customies](https://github.com/CustomiesDevs/Customies) (1.4.x, parado
+> em agosto de 2025) **corrompe o mundo** nos protocolos recentes. Ele renumera o dicionário de
+> blocos com índices sequenciais, mas a partir do MC 1.21.x o cliente identifica bloco pelo hash
+> fnv1a32 do estado — o servidor inclusive anuncia isso com `blockNetworkIdsAreHashes = true`.
+> Assim que o primeiro bloco customizado é registrado, **todo** bloco do mundo passa a ser enviado
+> com o número errado: o jogador atravessa o chão e cai para fora do mundo, enquanto no servidor o
+> terreno continua intacto. O sintoma não aparece no log e é fácil culpar o mapa.
 
 ## Instalação
 
-1. Coloque a pasta `CustomBlocks` em `plugins/`.
-2. Suba o servidor uma vez para gerar a pasta de dados do plugin.
-3. Jogue os PNGs das texturas na subpasta `textures/`.
-4. Descreva os blocos no `blocks.yml` e reinicie.
-
-> Se o plugin **Customies** avulso estiver instalado, o CustomBlocks se recusa a ligar — e o
-> PocketMine derruba o servidor, como faz com qualquer plugin que falhe ao habilitar. É de
-> propósito: duas palettes de blocos concorrendo deixariam os blocos de uma delas invisíveis para o
-> cliente, e isso só apareceria em produção. A correção é apagar `plugins/Customies` e usar só este.
+1. Instale o **Customies** ([fork do Altay](https://github.com/altayofficial/Customies)) em
+   `plugins/` — sem ele o PocketMine nem carrega este plugin.
+2. Coloque a pasta `CustomBlocks` em `plugins/`.
+3. Suba o servidor uma vez para gerar a pasta de dados do plugin.
+4. Jogue os PNGs das texturas na subpasta `textures/`.
+5. Descreva os blocos no `blocks.yml` e reinicie.
 
 O PocketMine-MP 5 não carrega plugins em pasta sozinho — é preciso ter o **DevTools** instalado,
 ou empacotar o plugin em `.phar`.
@@ -105,24 +109,6 @@ O array aceita exatamente os mesmos campos do `blocks.yml`. Para pegar a instân
 ```php
 $block = CustomiesBlockFactory::getInstance()->get("meuplugin:bloco");
 $item = $block->asItem();
-```
-
-## O Customies embutido
-
-A biblioteca fica em [`src/Unknown/CustomBlocks/libs/customiesdevs/customies/`](src/Unknown/CustomBlocks/libs/customiesdevs/customies/),
-com o namespace reescrito para `Unknown\CustomBlocks\libs\...` — o mesmo esquema de virion que o
-Poggit usa. É o código do Customies 1.4.0 sem alterações, menos o `Customies.php` (o entrypoint de
-plugin, que não faz sentido numa lib). O que ele fazia passou para o `onEnable` do CustomBlocks:
-registrar o `CustomiesListener` e chamar `addWorkerInitHook()` depois que o servidor sobe.
-
-O Customies é MIT; a licença original está junto em `libs/customiesdevs/customies/LICENSE`.
-
-Para atualizar a lib: copie o `src/` da versão nova por cima e rode
-
-```bash
-find src/Unknown/CustomBlocks/libs -name "*.php" -exec \
-  sed -i 's/\bcustomiesdevs\\customies\b/Unknown\\CustomBlocks\\libs\\customiesdevs\\customies/g' {} +
-rm src/Unknown/CustomBlocks/libs/customiesdevs/customies/Customies.php
 ```
 
 ## Limites conhecidos

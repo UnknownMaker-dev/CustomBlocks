@@ -6,7 +6,7 @@ namespace Unknown\CustomBlocks\command;
 
 use Unknown\CustomBlocks\block\BlockDefinition;
 use Unknown\CustomBlocks\CustomBlocks;
-use Unknown\CustomBlocks\libs\customiesdevs\customies\block\CustomiesBlockFactory;
+use customiesdevs\customies\block\CustomiesBlockFactory;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;

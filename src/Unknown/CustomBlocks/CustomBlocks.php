@@ -8,8 +8,6 @@ use Unknown\CustomBlocks\block\BlockDefinition;
 use Unknown\CustomBlocks\block\BlockDefinitionException;
 use Unknown\CustomBlocks\block\BlockRegistry;
 use Unknown\CustomBlocks\command\CustomBlocksCommand;
-use Unknown\CustomBlocks\libs\customiesdevs\customies\block\CustomiesBlockFactory;
-use Unknown\CustomBlocks\libs\customiesdevs\customies\CustomiesListener;
 use Unknown\CustomBlocks\resourcepack\ResourcePackGenerator;
 use pocketmine\plugin\PluginBase;
 use pocketmine\resourcepacks\ZippedResourcePack;
@@ -21,15 +19,12 @@ use Symfony\Component\Filesystem\Path;
 use Throwable;
 use function array_unshift;
 use function array_values;
-use function class_exists;
 use function count;
 use function is_array;
 use function is_int;
 use function is_string;
 use function method_exists;
-use function strrpos;
 use function strtolower;
-use function substr;
 
 /**
  * Cria blocos customizados a partir do blocks.yml usando o Customies, e monta o resource pack
@@ -46,19 +41,8 @@ final class CustomBlocks extends PluginBase {
 	}
 
 	protected function onEnable(): void {
-		$conflict = $this->findConflictingCustomies();
-		if($conflict !== null) {
-			$this->getLogger()->emergency("$conflict está instalado, mas o CustomBlocks traz o Customies embutido. Duas cópias do Customies brigam pela palette e deixam blocos ou itens invisíveis para o cliente. Use a versão CustomBlocks-NoLibs junto do Customies avulso.");
-			$this->getServer()->getPluginManager()->disablePlugin($this);
-			return;
-		}
-
 		$this->saveDefaultConfig();
 		$this->saveResource("blocks.yml");
-
-		// Papel que era do onEnable do Customies: este listener injeta a palette de blocos e os
-		// experimentos no StartGamePacket, sem ele o cliente não conhece nenhum bloco customizado.
-		$this->getServer()->getPluginManager()->registerEvents(new CustomiesListener(), $this);
 
 		$this->registry = new BlockRegistry($this->getLogger());
 		foreach($this->loadDefinitions() as $definition){
@@ -77,12 +61,10 @@ final class CustomBlocks extends PluginBase {
 			$command->setExecutor(new CustomBlocksCommand($this));
 		}
 
-		// Delay de 0 tick: roda assim que o servidor termina de subir, depois que todo plugin que
-		// depende do CustomBlocks já teve seu onEnable. A partir daqui a palette está fechada,
-		// então replicamos os blocos nos AsyncWorkers e travamos o registro.
+		// Delay de 0 tick: roda assim que o servidor termina de subir. Nesse ponto o Customies já
+		// replicou a palette nos AsyncWorkers e não aceita mais blocos, então travamos o registro.
 		$this->getScheduler()->scheduleDelayedTask(new ClosureTask(function (): void {
 			$this->registry->lock();
-			CustomiesBlockFactory::getInstance()->addWorkerInitHook(Path::join($this->getDataFolder(), "idcache"));
 		}), 0);
 	}
 
@@ -107,34 +89,6 @@ final class CustomBlocks extends PluginBase {
 		$definition = BlockDefinition::parse($identifier, $data);
 		$this->registry->register($definition);
 		return $definition;
-	}
-
-	/**
-	 * Procura outra cópia ativa do Customies.
-	 *
-	 * Além do plugin avulso, varremos os plugins carregados atrás de um Customies embutido em
-	 * `libs/` — a convenção de virion do Poggit — para pegar também plugins de terceiros.
-	 */
-	private function findConflictingCustomies(): ?string {
-		$manager = $this->getServer()->getPluginManager();
-		if($manager->getPlugin("Customies") !== null) {
-			return "O plugin Customies avulso";
-		}
-
-		foreach($manager->getPlugins() as $plugin){
-			if($plugin === $this) {
-				continue;
-			}
-			$main = $plugin->getDescription()->getMain();
-			$separator = strrpos($main, "\\");
-			if($separator === false) {
-				continue;
-			}
-			if(class_exists(substr($main, 0, $separator) . "\\libs\\customiesdevs\\customies\\CustomiesListener")) {
-				return "O plugin " . $plugin->getName();
-			}
-		}
-		return null;
 	}
 
 	/**
