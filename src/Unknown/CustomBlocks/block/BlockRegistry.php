@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Unknown\CustomBlocks\block;
 
-use Unknown\CustomBlocks\libs\customiesdevs\customies\block\CustomiesBlockFactory;
+use customiesdevs\customies\block\CustomiesBlockFactory;
 use Logger;
 use LogicException;
 use pocketmine\block\Block;

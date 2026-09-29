@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Unknown\CustomBlocks\block;
 
-use Unknown\CustomBlocks\libs\customiesdevs\customies\block\Material;
-use Unknown\CustomBlocks\libs\customiesdevs\customies\item\CreativeInventoryInfo;
+use customiesdevs\customies\block\Material;
+use customiesdevs\customies\item\CreativeInventoryInfo;
 use pocketmine\block\BlockBreakInfo;
 use pocketmine\block\BlockToolType;
 use pocketmine\item\ToolTier;

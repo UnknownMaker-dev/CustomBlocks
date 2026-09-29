@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Unknown\CustomBlocks\block;
 
-use Unknown\CustomBlocks\libs\customiesdevs\customies\block\BlockComponents;
-use Unknown\CustomBlocks\libs\customiesdevs\customies\block\permutations\Permutable;
-use Unknown\CustomBlocks\libs\customiesdevs\customies\block\permutations\RotatableTrait;
+use customiesdevs\customies\block\BlockComponents;
+use customiesdevs\customies\block\permutations\Permutable;
+use customiesdevs\customies\block\permutations\RotatableTrait;
 use pocketmine\block\Opaque;
 
 /**

@@ -106,3 +106,28 @@ blocks:
 #  creative.category     all, commands, construction, equipment, items, nature.
 #  creative.group        Grupo dentro da categoria, ex.: itemGroup.name.ore.
 # ============================================================================
+
+  # --- Marcador de regiao: atravessavel, translucido, so para trabalho -------
+  #
+  # Serve para enxergar uma area enquanto voce constroi. Nao e para ficar no
+  # mapa: some inteiro com /b limpar customblocks:marcador.
+  #
+  # solid: false e collision_box: false sao os dois que importam. O primeiro diz
+  # ao jogo que o bloco nao ocupa a face vizinha (sem isso um cubo de marcadores
+  # fica com as faces internas invisiveis e o volume parece oco); o segundo e o
+  # que deixa atravessar.
+  #
+  # hardness baixa e drops vazio: quebrar sem querer nao custa nada e nao suja o
+  # inventario.
+  customblocks:marcador:
+    name: "Marcador de Regiao"
+    texture: marcador
+    render_method: blend      # translucido de verdade (alpha_test so recorta)
+    transparent: true
+    solid: false
+    collision_box: false
+    light_filter: 0           # nao escurece nada embaixo
+    hardness: 0.1
+    drops: []
+    creative:
+      category: construction
